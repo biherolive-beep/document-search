@@ -1,0 +1,15 @@
+{
+    "name": "jules/wp-file-manager-elasticsearch",
+    "description": "A file manager plugin for WordPress with Elasticsearch integration.",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Jules",
+            "homepage": "https://example.com"
+        }
+    ],
+    "require": {
+        "elasticsearch/elasticsearch": "^8.0"
+    }
+}
