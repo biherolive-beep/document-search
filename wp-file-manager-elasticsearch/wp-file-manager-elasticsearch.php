@@ -131,110 +131,18 @@ function wpfmes_settings_page_html() {
 }
 
 /**
- * Scans a directory and returns a hierarchical array of files and folders.
- *
- * @param string $dir The directory path to scan.
- * @return array The hierarchical array of the directory structure.
- */
-function wpfmes_scan_directory($dir) {
-    $result = [];
-    $scan = scandir($dir);
-
-    foreach ($scan as $key => $value) {
-        if (!in_array($value, [".", ".."])) {
-            $path = rtrim($dir, '/') . '/' . $value;
-            if (is_dir($path)) {
-                $result[] = [
-                    'name' => $value,
-                    'type' => 'folder',
-                    'path' => $path,
-                    'children' => wpfmes_scan_directory($path)
-                ];
-            } else {
-                $result[] = [
-                    'name' => $value,
-                    'type' => 'file',
-                    'path' => $path,
-                    'file_type' => pathinfo($path, PATHINFO_EXTENSION)
-                ];
-            }
-        }
-    }
-    return $result;
-}
-
-/**
- * Renders the hierarchical file array as an HTML list.
- *
- * @param array $file_tree The hierarchical array of files and folders.
- * @return string The HTML representation of the file tree.
- */
-function wpfmes_render_file_tree($file_tree) {
-    $html = '<ul>';
-    foreach ($file_tree as $item) {
-        if ($item['type'] === 'folder') {
-            $html .= '<li class="wpfmes-folder">';
-            $html .= '<span>' . esc_html($item['name']) . '</span>';
-            if (!empty($item['children'])) {
-                $html .= wpfmes_render_file_tree($item['children']);
-            }
-            $html .= '</li>';
-        } else {
-            $html .= '<li class="wpfmes-file wpfmes-file-ext-' . esc_attr($item['file_type']) . '">';
-            $html .= '<a href="' . esc_url(str_replace(ABSPATH, site_url('/'), $item['path'])) . '" target="_blank">';
-            $html .= esc_html($item['name']);
-            $html .= '</a>';
-            $html .= '</li>';
-        }
-    }
-    $html .= '</ul>';
-    return $html;
-}
-
-/**
  * Shortcode for the public-facing file manager
  */
 add_shortcode('file_manager_search', 'wpfmes_file_manager_shortcode');
 function wpfmes_file_manager_shortcode() {
-    $options = get_option('wpfmes_options');
-    $upload_dir = wp_upload_dir();
-    $base_dir = $options['file_directory'] ?? $upload_dir['basedir'];
-
+    // For now, this is a placeholder.
+    // In the future, this will display the file tree and search bar.
     ob_start();
     ?>
     <div class="wpfmes-file-manager-wrapper">
         <h2>File Explorer</h2>
-        <?php
-        if (isset($base_dir) && is_dir($base_dir) && is_readable($base_dir)) {
-            $file_tree = wpfmes_scan_directory($base_dir);
-            if (empty($file_tree)) {
-                echo '<p>The specified directory is empty.</p>';
-            } else {
-                echo wpfmes_render_file_tree($file_tree);
-            }
-        } else {
-            echo '<p style="color: red;">Error: The configured directory does not exist or is not readable.</p>';
-        }
-        ?>
+        <p>The file manager and search functionality will be displayed here.</p>
     </div>
     <?php
     return ob_get_clean();
-}
-
-/**
- * Enqueue scripts and styles for the frontend.
- */
-add_action('wp_enqueue_scripts', 'wpfmes_enqueue_assets');
-function wpfmes_enqueue_assets() {
-    global $post;
-    // Only load assets if the shortcode is on the page to be efficient
-    if (is_a($post, 'WP_Post') && has_shortcode($post->post_content, 'file_manager_search')) {
-        // Enqueue the main stylesheet
-        wp_enqueue_style(
-            'wpfmes-style',
-            plugin_dir_url(__FILE__) . 'assets/css/style.css',
-            ['dashicons'], // Make sure dashicons are loaded
-            '1.0.0'
-        );
-    }
 }
