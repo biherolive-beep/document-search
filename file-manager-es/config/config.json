@@ -1,0 +1,6 @@
+{
+    "files_root": "/var/www/file-manager-es/uploads",
+    "elasticsearch_host": "http://localhost:9200",
+    "elasticsearch_index": "file_manager",
+    "indexable_file_types": "pdf,doc,txt,docx,xlsx,xls,rtf,ods"
+}
