@@ -1,0 +1,12 @@
+[Unit]
+Description=Apache Tika Server
+After=network.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/bin/java -jar /opt/tika/tika-server-standard.jar
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
