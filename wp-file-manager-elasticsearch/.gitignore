@@ -1,0 +1,17 @@
+# Composer dependencies
+/vendor/
+
+# Composer binary
+/composer.phar
+
+# Build artifacts
+/dist/
+/build/
+
+# Log files
+*.log
+logs/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
